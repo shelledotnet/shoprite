@@ -1,0 +1,6 @@
+@ShopRite.Host_HostAddress = http://localhost:5158
+
+GET {{ShopRite.Host_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
