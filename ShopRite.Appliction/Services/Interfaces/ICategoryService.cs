@@ -7,8 +7,8 @@ namespace ShopRite.Application.Services.Interfaces
     {
         Task<ServiceResponse<GetCategory>> GetByIdAsync(Guid id);
         Task<ServiceResponse<IEnumerable<GetCategory>>> GetAllAsync();
-        Task<ServiceResponse<GetCategory>> AddAsync(CreateCategory createCategory);
-        Task<ServiceResponse<dynamic>> DeleteAsync(Guid id);
-        Task<ServiceResponse<GetCategory>> UpdateAsync(UpdateCategory updateCategory);
+        Task<ServiceResponse<string>> AddAsync(CreateCategory createCategory);
+        Task<ServiceResponse<string>> DeleteAsync(Guid id);
+        Task<ServiceResponse<string>> UpdateAsync(UpdateCategory updateCategory);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ShopRite.Application.Dto;
 using ShopRite.Application.Dto.Category;
 using ShopRite.Application.Dto.Product;
 using ShopRite.Domain.Entities;
@@ -24,6 +25,8 @@ namespace ShopRite.Application.Mapping
 
             CreateMap<Category, GetCategory>();
             CreateMap<Product, GetProduct>();
+            CreateMap<ServiceResponse<IEnumerable<GetProduct>>, ServiceFailedResponse>();
+            CreateMap<ServiceResponse<GetProduct>, ServiceFailedResponse>();
 
         }
     }

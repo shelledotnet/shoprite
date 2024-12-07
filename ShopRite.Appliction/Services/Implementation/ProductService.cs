@@ -13,26 +13,27 @@ using System.Threading.Tasks;
 
 namespace ShopRite.Application.Services.Implementation
 {
-    //usin primary constructor
+    //services are client phasing
+    //using primary constructor
     public class ProductService(IGeneric<Product> productInterface, IMapper mapper) : IProductService
     {
 
-        public async Task<ServiceResponse<string>> AddAsync(CreateProduct createProduct)
+        public async Task<ServiceResponse<GetProduct?>> AddAsync(CreateProduct createProduct)
         {
             try
             {
                 Product product = mapper.Map<Product>(createProduct);
                 int result = await productInterface.AddAsync(product);
                 return result > 0 ?
-                     new ServiceResponse<string>("product created successfully",
-                          HttpStatusCode.Created, true, "successful") :
-                 new ServiceResponse<string>("product creation fail",
-                        HttpStatusCode.UnprocessableEntity, false, "failed");
+                     new ServiceResponse<GetProduct?>(mapper.Map<GetProduct>(product),
+                          HttpStatusCode.Created, true, "product created successfully") :
+                 new ServiceResponse<GetProduct?>(null,
+                        HttpStatusCode.UnprocessableEntity, false, "product creation fail");
             }
             catch (Exception ex)
             {
                 //log this
-                return new ServiceResponse<string>("error when creating product",
+                return new ServiceResponse<GetProduct?>(null,
                           HttpStatusCode.UnprocessableEntity, false, "failed");
             }
         }
@@ -60,8 +61,8 @@ namespace ShopRite.Application.Services.Implementation
         {
             try
             {
-                var products = await productInterface.GetAllAsync();
-                return products != null ?
+                var products = await productInterface.GetAllAsync(); //IEnumerabe is nullable prefable to use count to check if a record exist
+                return products.Count() > 0 ?
                       new ServiceResponse<IEnumerable<GetProduct>>(mapper.Map<IEnumerable<GetProduct>>(products), HttpStatusCode.OK, true, "success") :
                       new ServiceResponse<IEnumerable<GetProduct>>(null, HttpStatusCode.NotFound, false, "product not found");
 
@@ -98,8 +99,8 @@ namespace ShopRite.Application.Services.Implementation
             {
                 int update = await productInterface.UpdateAsync(mapper.Map<Product>(updateProduct));
                 return update > 0 ?
-                    new ServiceResponse<string>("update was successful", HttpStatusCode.NoContent, true, "success") :
-                    new ServiceResponse<string>("update wasn't successful", HttpStatusCode.UnprocessableEntity, false, "failed");
+                    new ServiceResponse<string>("product updated", HttpStatusCode.NoContent, true, "success") :
+                    new ServiceResponse<string>("product failed to be updated", HttpStatusCode.UnprocessableEntity, false, "failed");
 
             }
             catch (Exception)
