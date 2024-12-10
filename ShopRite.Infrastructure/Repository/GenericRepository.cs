@@ -16,27 +16,22 @@ namespace ShopRite.Infrastructure.Repository
     {
         public async Task<int> AddAsync(TEntity entity)
         {
-            try
-            {
                 appDbContext.Set<TEntity>().Add(entity);
                 return await appDbContext.SaveChangesAsync();
-            }
-            catch (Exception)
-            {
-                //TODO log Exception
-                return 0;
-            }
         }
 
         public async Task<int> DeleteAsync(Guid id)
         {
             try
             {
-                var entity = await appDbContext.Set<TEntity>().FindAsync(id) ?? 
-                    throw new ItemNotFoundException($"Item with {id} not found");
+                var entity = await appDbContext.Set<TEntity>().FindAsync(id);
 
-                appDbContext.Set<TEntity>().Remove(entity);
-                return await appDbContext.SaveChangesAsync();
+                if (entity != null)
+                {
+                    appDbContext.Set<TEntity>().Remove(entity);
+                    return await appDbContext.SaveChangesAsync();
+                }
+                return 0;
             }    
             catch (Exception)
             {
@@ -53,8 +48,8 @@ namespace ShopRite.Infrastructure.Repository
 
         public async Task<TEntity> GetByIdAsync(Guid id)
         {
-            var entity = await appDbContext.Set<TEntity>().FindAsync(id) ?? throw new ItemNotFoundException($"Item with {id} not found");
-            return entity;
+            return await appDbContext.Set<TEntity>().FindAsync(id);
+
         }
 
         public async Task<int> UpdateAsync(TEntity entity)

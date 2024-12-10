@@ -25,9 +25,14 @@ namespace ShopRite.Application.Mapping
 
             CreateMap<Category, GetCategory>();
             CreateMap<Product, GetProduct>();
-            CreateMap<ServiceResponse<IEnumerable<GetProduct>>, ServiceFailedResponse>();
+            CreateMap<UpdateProduct, Product>();
+            CreateMap<ServiceResponse<GetCategory>, ServiceFailedResponse>();
+            CreateMap<ServiceResponse<string>, ServiceFailedResponse>();
+            CreateMap<ServiceResponse<IEnumerable<GetCategory>>, ServiceFailedResponse>();
             CreateMap<ServiceResponse<GetProduct>, ServiceFailedResponse>();
+            CreateMap<ServiceResponse<IEnumerable<GetProduct>>, ServiceFailedResponse>();
 
+            //ServiceResponse<IEnumerable<GetProduct>>
         }
     }
 }

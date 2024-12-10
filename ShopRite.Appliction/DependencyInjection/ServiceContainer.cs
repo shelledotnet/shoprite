@@ -14,7 +14,7 @@ namespace ShopRite.Application.DependencyInjection
 {
     public static class ServiceContainer
     {
-        public static IServiceCollection AddInfraustureService(this IServiceCollection services)
+        public static IServiceCollection AddApplicationService(this IServiceCollection services)
         {
 
             services.AddScoped<IProductService ,ProductService>();

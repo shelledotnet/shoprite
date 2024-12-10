@@ -18,23 +18,23 @@ namespace ShopRite.Application.Services.Implementation
     //using primary constructor
     public class CategoryService(IGeneric<Category> categoryInterface, IMapper mapper) : ICategoryService
     {
-        public async Task<ServiceResponse<string>> AddAsync(CreateCategory createCategory)
+        public async Task<ServiceResponse<GetCategory?>> AddAsync(CreateCategory createCategory)
         {
             try
             {
                 Category category = mapper.Map<Category>(createCategory);
                 int result = await categoryInterface.AddAsync(category);
                 return result > 0 ?
-                     new ServiceResponse<string>("category created successfully",
+                     new ServiceResponse<GetCategory?>(mapper.Map<GetCategory>(category),
                           HttpStatusCode.Created, true, "successful") :
-                 new ServiceResponse<string>("category creation fail",
+                 new ServiceResponse<GetCategory?>(null,
                         HttpStatusCode.UnprocessableEntity, false, "failed");
             }
             catch (Exception ex)
             {
                 //log this
-                return new ServiceResponse<string>("error when creating category",
-                          HttpStatusCode.UnprocessableEntity, false, "failed");
+                return new ServiceResponse<GetCategory?>(null,
+                          HttpStatusCode.InternalServerError, false, "failed");
             }
         }
 
@@ -46,14 +46,14 @@ namespace ShopRite.Application.Services.Implementation
                 return result > 0 ?
                         new ServiceResponse<string>("category deleted successfully",
                              HttpStatusCode.NoContent, true, "successful") :
-                    new ServiceResponse<string>("category  failed to be deleted",
-                           HttpStatusCode.UnprocessableEntity, false, "failed");
+                    new ServiceResponse<string>("category not found or  failed to delete",
+                           HttpStatusCode.NotFound, false, "failed");
             }
             catch (Exception ex)
             {
                 //log this
                 return new ServiceResponse<string>("error when deleting category",
-                          HttpStatusCode.UnprocessableEntity, false, "failed");
+                          HttpStatusCode.InternalServerError, false, "failed");
             }
         }
 
@@ -71,7 +71,7 @@ namespace ShopRite.Application.Services.Implementation
             {
                 //log this
                 return new ServiceResponse<IEnumerable<GetCategory>>(null,
-                       HttpStatusCode.UnprocessableEntity, false, "failed");
+                       HttpStatusCode.InternalServerError, false, "failed");
 
             }
         }
@@ -83,12 +83,12 @@ namespace ShopRite.Application.Services.Implementation
                 Category category = await categoryInterface.GetByIdAsync(id);
                 return category != null ?
                     new ServiceResponse<GetCategory>(mapper.Map<GetCategory>(category), HttpStatusCode.OK, true, "success") :
-                    new ServiceResponse<GetCategory>(null, HttpStatusCode.UnprocessableEntity, false, "failed");
+                    new ServiceResponse<GetCategory>(null, HttpStatusCode.NotFound, false, "category not found");
             }
             catch (Exception)
             {
                 //log the exception
-                return new ServiceResponse<GetCategory>(null, HttpStatusCode.InternalServerError, false, "failed");
+                return new ServiceResponse<GetCategory>(null, HttpStatusCode.InternalServerError, false, "error occurred please contact support ");
 
             }
         }

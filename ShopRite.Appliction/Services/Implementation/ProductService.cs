@@ -20,8 +20,7 @@ namespace ShopRite.Application.Services.Implementation
 
         public async Task<ServiceResponse<GetProduct?>> AddAsync(CreateProduct createProduct)
         {
-            try
-            {
+            
                 Product product = mapper.Map<Product>(createProduct);
                 int result = await productInterface.AddAsync(product);
                 return result > 0 ?
@@ -29,13 +28,7 @@ namespace ShopRite.Application.Services.Implementation
                           HttpStatusCode.Created, true, "product created successfully") :
                  new ServiceResponse<GetProduct?>(null,
                         HttpStatusCode.UnprocessableEntity, false, "product creation fail");
-            }
-            catch (Exception ex)
-            {
-                //log this
-                return new ServiceResponse<GetProduct?>(null,
-                          HttpStatusCode.UnprocessableEntity, false, "failed");
-            }
+            
         }
 
         public async Task<ServiceResponse<string>> DeleteAsync(Guid id)
@@ -46,14 +39,14 @@ namespace ShopRite.Application.Services.Implementation
              return  result > 0 ?
                      new ServiceResponse<string>("product deleted successfully",
                           HttpStatusCode.NoContent, true, "successful") :
-                 new ServiceResponse<string>("product  failed to deleted",
-                        HttpStatusCode.UnprocessableEntity, false, "failed");
+                 new ServiceResponse<string>("product not found or  failed to  delete",
+                        HttpStatusCode.NotFound, false, "product not found or  failed to  delete");
             }
             catch (Exception ex)
             {
                 //log this
                 return new ServiceResponse<string>("error when deleting product",
-                          HttpStatusCode.UnprocessableEntity, false, "failed");
+                          HttpStatusCode.InternalServerError, false, "failed");
             }
         }
 
@@ -71,7 +64,7 @@ namespace ShopRite.Application.Services.Implementation
             {
                 //log this
                 return new ServiceResponse<IEnumerable<GetProduct>>(null,
-                       HttpStatusCode.UnprocessableEntity, false, "failed");
+                       HttpStatusCode.InternalServerError, false, "failed");
 
             }
         }
@@ -106,7 +99,7 @@ namespace ShopRite.Application.Services.Implementation
             catch (Exception)
             {
                 //log this 
-                return new ServiceResponse<string>("error when updating product", HttpStatusCode.UnprocessableEntity, false, "failed");
+                return new ServiceResponse<string>("error when updating product", HttpStatusCode.InternalServerError, false, "failed");
 
             }
         }
