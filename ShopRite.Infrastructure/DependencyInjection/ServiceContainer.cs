@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ShopRite.Application.Services.Interfaces.Logging;
 using ShopRite.Domain.Entities;
 using ShopRite.Domain.Interface;
 using ShopRite.Infrastructure.Data;
 using ShopRite.Infrastructure.Middleware;
 using ShopRite.Infrastructure.Repository;
+using ShopRite.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,14 +37,16 @@ namespace ShopRite.Infrastructure.DependencyInjection
 
             services.AddScoped<IGeneric<Product>, GenericRepository<Product>>();
             services.AddScoped<IGeneric<Category>, GenericRepository<Category>>();
-
+            services.AddScoped(typeof(IAppLogger<>), typeof(SerilogLoggerAdapter<>));
 
             return services;
         }
 
         public static IApplicationBuilder UseInfrastructureService(this IApplicationBuilder app)
         {
+            app.UseMiddleware<LoggingMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
+            
             return app;
         }
     }
