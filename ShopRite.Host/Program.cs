@@ -36,9 +36,9 @@ Log.Information("Shoprite starting up...");
 
 
 	builder.Services.AddInfraustureService(builder.Configuration);
-	builder.Services.AddApplicationService();
-builder.Services.AddCors(options =>
-{
+	builder.Services.AddApplicationService(builder.Configuration);
+    builder.Services.AddCors(options =>
+    {
 	options.AddDefaultPolicy(policy =>
 	{
 		policy.AllowAnyHeader()
@@ -47,7 +47,7 @@ builder.Services.AddCors(options =>
               .AllowAnyOrigin(); // this is open to any server or IP
 			  //.AllowCredentials();//we can pass a token here
 	});
-});
+    });
 
 #endregion
 
