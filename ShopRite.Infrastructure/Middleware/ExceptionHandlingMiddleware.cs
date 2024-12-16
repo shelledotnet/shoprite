@@ -63,7 +63,7 @@ namespace ShopRite.Infrastructure.Middleware
                 }
                 else
                 {
-                    logger.LogError(ex, "Related EFCore Exception");
+                    logger.LogError(ex, $"Related EFCore Exception correlationId:::{date}");
 
                     ServiceFailedResponse serviceFailed = new ServiceFailedResponse(
                   System.Net.HttpStatusCode.Conflict, false, "An error occurred while saving the entity changes. ");
@@ -75,7 +75,7 @@ namespace ShopRite.Infrastructure.Middleware
             {
                 {
                     context.RequestServices.GetRequiredService<IAppLogger<ExceptionHandlingMiddleware>>()
-                                           .LogError(ex, "Unknown Exception");
+                                           .LogError(ex, $"Unknown Exception correlationId:::{date}");
 
                     ServiceFailedResponse serviceFailed = new ServiceFailedResponse(
    System.Net.HttpStatusCode.Conflict, false, "An error occurred . Please contact support . ");
