@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using ShopRite.Application.Dto;
 using ShopRite.Application.Dto.Category;
+using ShopRite.Application.Dto.Identity;
 using ShopRite.Application.Dto.Product;
 using ShopRite.Domain.Entities;
+using ShopRite.Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +33,10 @@ namespace ShopRite.Application.Mapping
             CreateMap<ServiceResponse<IEnumerable<GetCategory>>, ServiceFailedResponse>();
             CreateMap<ServiceResponse<GetProduct>, ServiceFailedResponse>();
             CreateMap<ServiceResponse<IEnumerable<GetProduct>>, ServiceFailedResponse>();
+            CreateMap<CreateUser, ApplicationUser>();
+            CreateMap<LoginUser, ApplicationUser>();
 
-            //ServiceResponse<IEnumerable<GetProduct>>
+            //ServiceResponse<IEnumerable<GetProduct>>  
         }
     }
 }

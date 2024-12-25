@@ -11,9 +11,11 @@ using ShopRite.Application.Services.Interfaces.Logging;
 using ShopRite.Domain.Entities;
 using ShopRite.Domain.Entities.Identity;
 using ShopRite.Domain.Interface;
+using ShopRite.Domain.Interface.Authentication;
 using ShopRite.Infrastructure.Data;
 using ShopRite.Infrastructure.Middleware;
 using ShopRite.Infrastructure.Repository;
+using ShopRite.Infrastructure.Repository.Authentiction;
 using ShopRite.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
@@ -31,8 +33,6 @@ namespace ShopRite.Infrastructure.DependencyInjection
             IConfiguration config)
         {
             var projectOptions = config.GetSection(nameof(ProjectOptions)).Get<ProjectOptions>();
-
-
 
             #region JWT Authentication configuration
             var tokenvalidationParameter = new TokenValidationParameters
@@ -64,7 +64,7 @@ namespace ShopRite.Infrastructure.DependencyInjection
                 jwt.SaveToken = true;
 
                 #region AppendTokenOnCookies
-                //options.Events = new JwtBearerEvents
+                //jwt.Events = new JwtBearerEvents
                 //{
                 //    OnMessageReceived = ctx =>
                 //    {
@@ -79,9 +79,6 @@ namespace ShopRite.Infrastructure.DependencyInjection
 
             });
             #endregion
-
-
-
 
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("ShopRiteConnection"),
@@ -111,6 +108,10 @@ namespace ShopRite.Infrastructure.DependencyInjection
 
             }).AddRoles<IdentityRole>()
               .AddEntityFrameworkStores<AppDbContext>();
+
+            services.AddScoped<IUserManagement,UserManagement>();
+            services.AddScoped<ITokenManagement, TokenManagement>();
+            services.AddScoped<IRoleManagement, RoleManagment>();
 
             return services;
         }
