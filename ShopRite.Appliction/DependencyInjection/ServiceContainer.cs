@@ -1,9 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopRite.Application.Mapping;
 using ShopRite.Application.Services;
 using ShopRite.Application.Services.Implementation;
 using ShopRite.Application.Services.Interfaces;
+using ShopRite.Application.ValidationServices;
+using ShopRite.Application.ValidationServices.Authentication;
 using ShopRite.Domain.Entities;
 using ShopRite.Domain.Interface;
 using System;
@@ -38,8 +43,10 @@ namespace ShopRite.Application.DependencyInjection
                    })
                  .ValidateOnStart();
 
-
-
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+            services.AddScoped<IValidationService,ValidationService>();
+            services.AddScoped<IAuthenticationService,AuthenticationService>();
 
             return services;
         }
